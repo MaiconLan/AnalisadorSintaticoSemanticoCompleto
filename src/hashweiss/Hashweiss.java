@@ -24,39 +24,89 @@ public class Hashweiss {
     }
 
     public static void trabalho2() throws HashweissException {
-
         Simbolo simbolo = new Simbolo();
         simbolo.setNome("Token");
+        simbolo.setNivel(1);
+        simbolo.setCategoria("Categoria");
+        simbolo.setGeralA(5);
+        simbolo.setGeralB(7);
 
         Simbolo simbolo2 = new Simbolo();
         simbolo2.setNome("Token2");
+        simbolo2.setNivel(1);
+        simbolo2.setCategoria("Categoria");
+        simbolo2.setGeralA(5);
+        simbolo2.setGeralB(7);
 
         Simbolo simbolo3 = new Simbolo();
         simbolo3.setNome("Token3");
+        simbolo3.setNivel(1);
+        simbolo3.setCategoria("Categoria");
+        simbolo3.setGeralA(5);
+        simbolo3.setGeralB(7);
 
         Simbolo simbolo4 = new Simbolo();
         simbolo4.setNome("Token");
+        simbolo4.setNivel(1);
+        simbolo4.setCategoria("Categoria");
+        simbolo4.setGeralA(5);
+        simbolo4.setGeralB(7);
+
 
         Simbolo simbolo5 = new Simbolo();
         simbolo5.setNome("Token5");
+        simbolo5.setNivel(1);
+        simbolo5.setCategoria("Categoria");
+        simbolo5.setGeralA(5);
+        simbolo5.setGeralB(7);
+
 
         Simbolo simbolo6 = new Simbolo();
         simbolo6.setNome("Token");
+        simbolo6.setNivel(1);
+        simbolo6.setCategoria("Categoria");
+        simbolo6.setGeralA(5);
+        simbolo6.setGeralB(7);
+
 
         Simbolo simbolo7 = new Simbolo();
         simbolo7.setNome("Token7");
+        simbolo7.setNivel(1);
+        simbolo7.setCategoria("Categoria");
+        simbolo7.setGeralA(5);
+        simbolo7.setGeralB(7);
+
 
         Simbolo simbolo8 = new Simbolo();
         simbolo8.setNome("Token8");
+        simbolo8.setNivel(1);
+        simbolo8.setCategoria("Categoria");
+        simbolo8.setGeralA(5);
+        simbolo8.setGeralB(7);
+
 
         Simbolo simbolo9 = new Simbolo();
         simbolo9.setNome("Token9");
+        simbolo9.setNivel(1);
+        simbolo9.setCategoria("Categoria");
+        simbolo9.setGeralA(5);
+        simbolo9.setGeralB(7);
+
 
         Simbolo simbolo10 = new Simbolo();
         simbolo10.setNome("Token10");
+        simbolo10.setNivel(1);
+        simbolo10.setCategoria("Categoria");
+        simbolo10.setGeralA(5);
+        simbolo10.setGeralB(7);
 
         Simbolo simbolo11 = new Simbolo();
         simbolo11.setNome("Token11");
+        simbolo11.setNivel(1);
+        simbolo11.setCategoria("Categoria");
+        simbolo11.setGeralA(5);
+        simbolo11.setGeralB(7);
+
 
         //Inserir 10 elementos;
         adicionar(simbolo);
