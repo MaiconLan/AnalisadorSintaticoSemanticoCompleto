@@ -96,15 +96,27 @@ public class Hashweiss {
 
         // Fazer uma busca por nome de 3 elementos que estão na tabela.
         // Mostrar os dados completos dos elementos encontrados.
-        System.out.println(buscar(simbolo9).getNome());
-        System.out.println(buscar(simbolo10).getNome());
-        System.out.println(buscar(simbolo11).getNome());
+
+        System.out.println("-----------------------------------------------------------------------");
+        mostrarDadosCompletos(buscar(simbolo9));
+        mostrarDadosCompletos(buscar(simbolo10));
+        mostrarDadosCompletos(buscar(simbolo11));
 
         //  Fazer uma busca por 1 elemento inexistente na tabela.
         //  Mostrar mensagem informando que o elemento não foi encontrado;
         Simbolo simboloNaoExistente = new Simbolo();
         simboloNaoExistente.setNome("Novo símbo que não existe");
         buscar(simboloNaoExistente);
+    }
+
+    public static void mostrarDadosCompletos(Simbolo simbolo) {
+        System.out.println("--------Símbolo: " + simbolo.getNome());
+        System.out.println("--------Próximo: " + (possuiProximo(simbolo) ? simbolo.getProximo().getNome() : " null"));
+        System.out.println("--------Nível: " + simbolo.getNivel());
+        System.out.println("--------Categoria: " + simbolo.getCategoria());
+        System.out.println("--------GeralA: " + simbolo.getGeralA());
+        System.out.println("--------GeralB: " + simbolo.getGeralB());
+        System.out.println("-----------------------------------------------------------------------");
     }
 
     public static void atualizar(Simbolo simbolo, Simbolo novoSimbolo) throws HashweissException {
@@ -207,13 +219,13 @@ public class Hashweiss {
     }
 
     public static Simbolo buscar(Simbolo simbolo) throws HashweissException {
-        System.out.println("-->Buscando símbolo " + simbolo.getNome() + "<--");
+        System.out.println("-->Buscando símbolo \"" + simbolo.getNome() + "\"<--");
         int indexSimbolo = hash(simbolo.getNome(), TAMANHO_TABELA);
 
         Simbolo busca = simbolos[indexSimbolo];
 
         if (busca == null) {
-            throw new HashweissException("Não foi possível encontrar o Símbolo \"" + simbolo.getNome() + "\" para buscar!");
+            throw new HashweissException("Não foi encontrado o Símbolo \"" + simbolo.getNome() + "\" para buscar!");
         }
 
         if (busca.getNome().equals(simbolo.getNome())) {
