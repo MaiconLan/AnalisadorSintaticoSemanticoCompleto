@@ -19,30 +19,42 @@ public class Controller {
     private File f;
 
     @FXML
-    private TextArea resultado;
+    private TextArea resultadoLexico;
+
+    @FXML
+    private TextArea resultadoSintatico;
+
+    @FXML
+    private TextArea resultadoSemantico;
 
     @FXML
     private Text arquivo;
 
     @FXML
     public void analisar() {
-        String resultado = "";
+        String resultadoLexico = "";
+        String resultadoSintatico = "";
         try {
+            if(f == null) {
+                arquivo.setText("Selecione o Arquivo!!!!!!!!!");
+            }
             Lexico lexico = new Lexico(new FileReader(f));
-            resultado = resultado.concat(lexico.scanAll());
+            resultadoLexico = lexico.scanAll();
             Sintatico sintatico = new Sintatico(Util.RESULTADO_COMPILADOR_LEXICO);
-            resultado = resultado.concat(sintatico.scanAll());
+            resultadoSintatico = sintatico.scanAll();
 
-            this.resultado.setText(resultado);
+            this.resultadoLexico.setText(resultadoLexico);
+            this.resultadoSintatico.setText(resultadoSintatico);
 
         } catch (IOException e) {
             e.printStackTrace();
 
         } catch (AnalisadorLexicoException e) {
-            this.resultado.setText(resultado + "\n" + e.getMessage());
+            this.resultadoLexico.setText(resultadoLexico + "\n" + e.getMessage());
 
         } catch (AnalisadorSintaticoException e) {
-            this.resultado.setText(resultado + "\n" + e.getMessage());
+            this.resultadoLexico.setText(resultadoLexico);
+            this.resultadoSintatico.setText(resultadoSintatico + "\n" + e.getMessage());
         }
     }
 

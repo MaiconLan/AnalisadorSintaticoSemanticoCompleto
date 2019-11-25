@@ -12,18 +12,10 @@ public class Hashweiss {
     O método do trabalho é trabalho2(); que está sendo chamado no main!!!!
      */
 
-    private static final int TAMANHO_TABELA = 25143;
-    private static Simbolo[] simbolos = new Simbolo[TAMANHO_TABELA];  //Inicialização
-
-    public static void main(String[] args) {
-        try {
-            trabalho2();
-        } catch (HashweissException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static void trabalho2() throws HashweissException {
+    private final int TAMANHO_TABELA = 25143;
+    private Simbolo[] simbolos = new Simbolo[TAMANHO_TABELA];  //Inicialização
+    
+    public void trabalho2() throws HashweissException {
         Simbolo simbolo = new Simbolo();
         simbolo.setNome("Token");
         simbolo.setNivel(1);
@@ -159,7 +151,7 @@ public class Hashweiss {
         buscar(simboloNaoExistente);
     }
 
-    public static void mostrarDadosCompletos(Simbolo simbolo) {
+    public void mostrarDadosCompletos(Simbolo simbolo) {
         System.out.println("--------Símbolo: " + simbolo.getNome());
         System.out.println("--------Próximo: " + (possuiProximo(simbolo) ? simbolo.getProximo().getNome() : " null"));
         System.out.println("--------Nível: " + simbolo.getNivel());
@@ -169,7 +161,7 @@ public class Hashweiss {
         System.out.println("-----------------------------------------------------------------------");
     }
 
-    public static void atualizar(Simbolo simbolo, Simbolo novoSimbolo) throws HashweissException {
+    public void atualizar(Simbolo simbolo, Simbolo novoSimbolo) throws HashweissException {
         System.out.println("--------------Atualizando símbolo " + simbolo.getNome() + "--------------");
         int indexSimbolo = hash(simbolo.getNome(), TAMANHO_TABELA);
 
@@ -197,7 +189,7 @@ public class Hashweiss {
         }
     }
 
-    public static void mostraConteudoTabela() {
+    public void mostraConteudoTabela() {
         System.out.println("--------------Conteudo Tabela--------------");
         for (Simbolo simbolo : simbolos) {
             if (simbolo != null) {
@@ -212,7 +204,7 @@ public class Hashweiss {
         }
     }
 
-    public static int hash(String key, int tableSize) {
+    public int hash(String key, int tableSize) {
         int hashVal = 0;
         for (int i = 0; i < key.length(); i++)
             hashVal = 37 * hashVal + key.charAt(i);
@@ -222,7 +214,7 @@ public class Hashweiss {
         return hashVal;
     }
 
-    public static void adicionar(Simbolo simbolo) {
+    public void adicionar(Simbolo simbolo) {
         System.out.println("-->Adicionando símbolo " + simbolo.getNome() + "<--");
 
         int indexSimbolo = hash(simbolo.getNome(), TAMANHO_TABELA);
@@ -241,7 +233,7 @@ public class Hashweiss {
         }
     }
 
-    public static void remover(Simbolo simbolo) throws HashweissException {
+    public void remover(Simbolo simbolo) throws HashweissException {
         System.out.println("-->Removendo símbolo " + simbolo.getNome() + "<--");
         int indexSimbolo = hash(simbolo.getNome(), TAMANHO_TABELA);
 
@@ -268,7 +260,7 @@ public class Hashweiss {
         }
     }
 
-    public static Simbolo buscar(Simbolo simbolo) throws HashweissException {
+    public Simbolo buscar(Simbolo simbolo) throws HashweissException {
         System.out.println("-->Buscando símbolo \"" + simbolo.getNome() + "\"<--");
         int indexSimbolo = hash(simbolo.getNome(), TAMANHO_TABELA);
 
@@ -290,18 +282,18 @@ public class Hashweiss {
         }
     }
 
-    private static boolean posicaoVazia(int index) {
+    private boolean posicaoVazia(int index) {
         return simbolos[index] == null;
     }
 
-    private static boolean possuiProximo(Simbolo simbolo) {
+    private boolean possuiProximo(Simbolo simbolo) {
         return simbolo.getProximo() != null;
     }
 
     /*
         MÉTODOS DE TESTES DAS FUNCIONALIDADES!!!!!
      */
-    public static void casoDeTeste2() throws HashweissException {
+    public void casoDeTeste2() throws HashweissException {
         Simbolo simbolo = new Simbolo();
         simbolo.setNome("Token");
 
@@ -323,7 +315,7 @@ public class Hashweiss {
         mostraConteudoTabela();
     }
 
-    public static void casoDeTeste() throws HashweissException {
+    public void casoDeTeste() throws HashweissException {
 
         Simbolo simbolo = new Simbolo();
         simbolo.setNome("primeiro");

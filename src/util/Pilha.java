@@ -28,6 +28,16 @@ public class Pilha {
         return this.pilha[this.posicaoPilha];
     }
 
+
+    public Integer exibePenultimoValor() {
+        return this.pilha[this.posicaoPilha - 1];
+    }
+
+
+    public Integer exibeAntepenultimoValor() {
+        return this.pilha[this.posicaoPilha - 2];
+    }
+
     public Object desempilhar() {
         //pop
         if (pilhaVazia()) {

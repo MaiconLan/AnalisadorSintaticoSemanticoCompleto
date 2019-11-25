@@ -65,6 +65,7 @@ public class Lexico {
     }
 
     public String scanAll() throws IOException, AnalisadorLexicoException {
+        line = 1;
         StringBuilder texto = new StringBuilder();
         StringBuilder resultado = new StringBuilder();
         resultado.append("|---Código---|---------Token---------|------------Descrição------------|" + "\n");
@@ -77,7 +78,8 @@ public class Lexico {
             texto.append(tok.tag + " ");
 
             if (tok.tag == Codigo.CARACTERE_INVALIDO.value) {
-                throw new AnalisadorLexicoException(tok.descricao);
+                System.out.println(tok);
+                throw new AnalisadorLexicoException(tok.toString());
             } else if (tok.tag == Codigo.FIM_ARQUIVO.value) {
                 break;
             }
@@ -167,7 +169,7 @@ public class Lexico {
                 case ',':
                     readch();
                     return ConstantesTerminais.VIRGULA;
-                case '$':
+                case '\uFFFF':
                     readch();
                     return ConstantesTerminais.FIM_ARQUIVO;
                 case ';':

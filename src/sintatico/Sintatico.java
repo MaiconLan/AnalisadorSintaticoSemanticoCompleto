@@ -31,6 +31,7 @@ public class Sintatico {
         StringBuilder resultado = new StringBuilder();
         Pilha simbolos = novaPilha();
         Pilha entrada = new Pilha();
+        Semantico semantico = new Semantico();
 
         readLine();
         String[] arrayEntrada = line.split(" ");
@@ -85,8 +86,7 @@ public class Sintatico {
                 }
 
             } else {
-                lancarErro(simboloTopoPilha, entrada.exibeUltimoValor());
-
+                tratarSemantico(semantico, simboloTopoPilha, entrada.exibePenultimoValor(), entrada.exibeAntepenultimoValor());
             }
 
         } while (!simbolos.pilhaVazia());
@@ -106,8 +106,12 @@ public class Sintatico {
         return resultado.toString();
     }
 
+    private void tratarSemantico(Semantico semantico, int simboloTopoPilha, Integer penultimoValor, Integer antepenultimoValor){
+        semantico.tratarSemantico(simboloTopoPilha, penultimoValor, antepenultimoValor);
+    }
+
     private void lancarErro(int simboloEsperado, int simboloRecebido) throws AnalisadorSintaticoException {
-        throw new AnalisadorSintaticoException(ParserConstants.PARSER_ERROR[simboloEsperado] + ", era esperado " + simboloEsperado + " porém foi recebido  " + simboloRecebido);
+        throw new AnalisadorSintaticoException(ParserConstants.PARSER_ERROR[simboloEsperado - ParserConstants.FIRST_SEMANTIC_ACTION - ParserConstants.FIRST_NON_TERMINAL] + ", era esperado " + simboloEsperado + " porém foi recebido  " + simboloRecebido);
     }
 
     private int[] obterRegrasProducao(int idMatrizParse) {
