@@ -7,11 +7,8 @@ import util.HashweissException;
 import util.Pilha;
 
 import java.util.Hashtable;
-import java.util.Map;
 
 public class Semantico {
-
-    private Hashtable<String, Token> words;
 
     private Hashweiss tabelaSimbolos = new Hashweiss();
 
@@ -22,51 +19,66 @@ public class Semantico {
     private Pilha cases;
     private Pilha repeats;
     private Pilha procedures;
+
     private int nivel = 0;
     private int deslocamento = 0;
     private int nivelAtual = 0;
+
     private String tipoIdentificador;
 
-    private String resultadoSemantico;
+    private String resultadoSemantico = "";
 
-    public Semantico(Hashtable words) {
-        this.words = words;
+    public Semantico() {
     }
 
-    public void executaAcaoSemantica(int acaoSemantica, Integer penultimoValor, Integer antepenultimoValor) throws AnalisadorSemanticoException {
-        switch (acaoSemantica) {
-            // #100  Inicialização de variáveis de controle utilizadas
-            //durante toda a análise semântica...
+    public void executaAcaoSemantica(int acaoSemantica, int penultimoValor, int antepenultimoValor) throws AnalisadorSemanticoException {
+    }
+
+    public void executaAcaoSemantica(Token acaoSemantica, Token penultimoValor, Token antepenultimoValor) throws AnalisadorSemanticoException {
+        int numeroAcaoSemantica = acaoSemantica.tag - ParserConstants.FIRST_SEMANTIC_ACTION;
+
+        switch (numeroAcaoSemantica) {
+            // #100  Inicialização de variáveis de controle utilizadas durante toda a análise semântica...
             case 100:
-                acaoSemantica100(acaoSemantica);
+                acaoSemantica100();
+                break;
+
+            // Gera instrução AMEM utilizando como base o número de ações acumuladas na ação #104
+            case 102:
+                acaoSemantica102();
                 break;
 
             // #104  Insere nome na tabela de símbolos...
             case 104:
-                acaoSemantica104(acaoSemantica, penultimoValor, antepenultimoValor);
+                acaoSemantica104(numeroAcaoSemantica, penultimoValor, antepenultimoValor);
                 break;
 
             // #107  Seta tipo de identificador = VARIÁVEL
             case 107:
-                acaoSemantica107(acaoSemantica, penultimoValor, antepenultimoValor);
+                acaoSemantica107(numeroAcaoSemantica, penultimoValor, antepenultimoValor);
                 break;
 
             default:
-                lancarErro("Ação Semantica não mapeada: " + acaoSemantica + "\n");
+                lancarErro("Ação Semantica não mapeada: " + numeroAcaoSemantica + "\n");
         }
-        resultadoSemantico += "Executada Ação " + acaoSemantica + "\n";
+        resultadoSemantico = "Executada Ação " + acaoSemantica + "\n";
     }
 
-    private void acaoSemantica104(int acaoSemantica, Integer penultimoValor, Integer antepenultimoValr) throws AnalisadorSemanticoException {
+    private void acaoSemantica102() {
+
+    }
+
+    private void acaoSemantica104(int acaoSemantica, Token penultimoValor, Token antepenultimoValr) throws AnalisadorSemanticoException {
         try {
-            if (this.tipoIdentificador.equals("VARIAVEL")) {
+            if (tipoIdentificador.equals("VARIAVEL")) {
                 Simbolo penultimoSimbolo = getSimbolo(penultimoValor);
                 Simbolo simboloBusca = this.tabelaSimbolos.buscar(penultimoSimbolo);
                 if (simboloBusca == null) {
                     Simbolo simbolo = new Simbolo(penultimoSimbolo.getNome(), "VARIAVEL", this.nivelAtual, this.deslocamento, 0);
-                    this.tabelaSimbolos.adicionar(simbolo);
-                    this.deslocamento += 1;
-                    this.nivel += 1;
+
+                    tabelaSimbolos.adicionar(simbolo);
+                    deslocamento += 1;
+                    nivel += 1;
                 } else {
                     lancarErro("Erro semântico\nVariável \"" + penultimoSimbolo.getNome() + "\" já foi declarada");
                 }
@@ -76,12 +88,12 @@ public class Semantico {
         }
     }
 
-    private void acaoSemantica107(int acaoSemantica, Integer penultimoValor, Integer antepenultimoValr) {
+    private void acaoSemantica107(int acaoSemantica, Token penultimoValor, Token antepenultimoValr) {
         this.tipoIdentificador = "VARIAVEL";
         this.nivel = 0;
     }
 
-    private void acaoSemantica100(int acaoSemantica) {
+    private void acaoSemantica100() {
         this.ifs = new Pilha();
         this.fors = new Pilha();
         this.whiles = new Pilha();
@@ -92,6 +104,10 @@ public class Semantico {
         this.nivel = 0;
         this.deslocamento = 0;
         this.nivelAtual = 0;
+    }
+
+    public void tratarSemantico(Token simboloTopoPilha, Token penultimoValor, Token antepenultimoValor) throws AnalisadorSemanticoException {
+        executaAcaoSemantica(simboloTopoPilha, penultimoValor, antepenultimoValor);
     }
 
     public void tratarSemantico(int simboloTopoPilha, Integer penultimoValor, Integer antepenultimoValor) throws AnalisadorSemanticoException {
@@ -107,16 +123,11 @@ public class Semantico {
         //  }
     }
 
-    private Simbolo getSimbolo(int s) {
-        for (Map.Entry<String, Token> token : words.entrySet()) {
-            if (token.getValue().tag == s) {
-                Simbolo simbolo = new Simbolo();
-                simbolo.setNome(token.getKey());
-                simbolo.setCategoria(token.getValue().descricao);
-                return simbolo;
-            }
-        }
-        return null;
+    private Simbolo getSimbolo(Token token) {
+        Simbolo simbolo = new Simbolo();
+        simbolo.setNome(token.toString());
+        simbolo.setCategoria(token.descricao);
+        return simbolo;
     }
 
     private void lancarErro(String erro) throws AnalisadorSemanticoException {

@@ -5,6 +5,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import lexico.Lexico;
+import lexico.Token;
 import sintatico.AnalisadorLexicoException;
 import sintatico.AnalisadorSemanticoException;
 import sintatico.AnalisadorSintaticoException;
@@ -12,6 +13,7 @@ import sintatico.Sintatico;
 import util.Util;
 
 import java.io.*;
+import java.util.List;
 
 public class Controller {
 
@@ -56,8 +58,9 @@ public class Controller {
 
             Lexico lexico = new Lexico(new FileReader(f));
             resultadoLexico = lexico.scanAll();
-            Sintatico sintatico = new Sintatico(Util.RESULTADO_COMPILADOR_LEXICO);
-            resultadoSintatico = sintatico.scanAll(lexico.getWords(), resultadoSemantico);
+            List<Token> tokens = lexico.getTokens();
+            Sintatico sintatico = new Sintatico(tokens);
+            resultadoSintatico = sintatico.scanAll();
 
             this.resultadoLexico.setText(resultadoLexico);
             this.resultadoSintatico.setText(resultadoSintatico);

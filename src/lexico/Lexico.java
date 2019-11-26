@@ -4,7 +4,9 @@ import sintatico.AnalisadorLexicoException;
 import util.Util;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 
 public class Lexico {
@@ -15,6 +17,8 @@ public class Lexico {
     private FileReader file = null;
 
     private Hashtable words = new Hashtable();
+
+    private List<Token> tokens = new ArrayList<>();
 
     private void reserve(ConstantesTerminais w) {
         words.put(w.getLexeme(), w);
@@ -74,7 +78,7 @@ public class Lexico {
             Token tok = scan();
 
             resultado.append("Código: " + tok.tag + "\t\t\tToken:" + tok.toString() + (tok.descricao != null ? "\t\t\t\tDescrição: " + tok.descricao : "") + "\n");
-
+            tokens.add(tok);
             texto.append(tok.tag + " ");
 
             if (tok.tag == Codigo.CARACTERE_INVALIDO.value) {
@@ -272,5 +276,9 @@ public class Lexico {
 
     public Hashtable getWords() {
         return words;
+    }
+
+    public List<Token> getTokens() {
+        return tokens;
     }
 }
