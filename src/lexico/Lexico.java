@@ -269,4 +269,8 @@ public class Lexico {
         ch = ' ';
         return t;
     }
+
+    public Hashtable getWords() {
+        return words;
+    }
 }

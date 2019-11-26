@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Hashtable;
 
 public class Sintatico {
 
@@ -27,11 +28,11 @@ public class Sintatico {
         line = reader.readLine();
     }
 
-    public String scanAll() throws IOException, AnalisadorSintaticoException {
+    public String scanAll(Hashtable words, String resultadoSemantico) throws IOException, AnalisadorSintaticoException, AnalisadorSemanticoException {
         StringBuilder resultado = new StringBuilder();
         Pilha simbolos = novaPilha();
         Pilha entrada = new Pilha();
-        Semantico semantico = new Semantico();
+        Semantico semantico = new Semantico(words);
 
         readLine();
         String[] arrayEntrada = line.split(" ");
@@ -86,7 +87,9 @@ public class Sintatico {
                 }
 
             } else {
-                tratarSemantico(semantico, simboloTopoPilha, entrada.exibePenultimoValor(), entrada.exibeAntepenultimoValor());
+                semantico.tratarSemantico(simboloTopoPilha, entrada.exibePenultimoValor(), entrada.exibeAntepenultimoValor());
+                resultadoSemantico += semantico.getResultadoSemantico();
+                simbolos.desempilhar();
             }
 
         } while (!simbolos.pilhaVazia());
@@ -104,10 +107,6 @@ public class Sintatico {
         }
 
         return resultado.toString();
-    }
-
-    private void tratarSemantico(Semantico semantico, int simboloTopoPilha, Integer penultimoValor, Integer antepenultimoValor){
-        semantico.tratarSemantico(simboloTopoPilha, penultimoValor, antepenultimoValor);
     }
 
     private void lancarErro(int simboloEsperado, int simboloRecebido) throws AnalisadorSintaticoException {
