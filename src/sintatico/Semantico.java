@@ -52,8 +52,9 @@ public class Semantico {
                 break;
 
             default:
-                lancarErro("Ação Semantica não mapeada: " + acaoSemantica);
+                lancarErro("Ação Semantica não mapeada: " + acaoSemantica + "\n");
         }
+        resultadoSemantico += "Executada Ação " + acaoSemantica + "\n";
     }
 
     private void acaoSemantica104(int acaoSemantica, Integer penultimoValor, Integer antepenultimoValr) throws AnalisadorSemanticoException {
@@ -67,7 +68,7 @@ public class Semantico {
                     this.deslocamento += 1;
                     this.nivel += 1;
                 } else {
-                    lancarErro("Erro semântico\nVariável \"" + penultimoSimbolo + "\" já foi declarada");
+                    lancarErro("Erro semântico\nVariável \"" + penultimoSimbolo.getNome() + "\" já foi declarada");
                 }
             }
         } catch (HashweissException e) {
@@ -91,8 +92,6 @@ public class Semantico {
         this.nivel = 0;
         this.deslocamento = 0;
         this.nivelAtual = 0;
-
-        resultadoSemantico += "Executada Ação " + acaoSemantica;
     }
 
     public void tratarSemantico(int simboloTopoPilha, Integer penultimoValor, Integer antepenultimoValor) throws AnalisadorSemanticoException {
@@ -112,7 +111,7 @@ public class Semantico {
         for (Map.Entry<String, Token> token : words.entrySet()) {
             if (token.getValue().tag == s) {
                 Simbolo simbolo = new Simbolo();
-                simbolo.setNome(token.getValue().descricao);
+                simbolo.setNome(token.getKey());
                 simbolo.setCategoria(token.getValue().descricao);
                 return simbolo;
             }
