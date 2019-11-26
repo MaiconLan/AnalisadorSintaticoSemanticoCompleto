@@ -23,7 +23,9 @@ public class Semantico {
     private Pilha repeats;
     private Pilha procedures;
     private int nivel = 0;
+    private int deslocamento = 0;
     private int nivelAtual = 0;
+    private String tipoIdentificador;
 
     private String resultadoSemantico;
 
@@ -31,16 +33,51 @@ public class Semantico {
         this.words = words;
     }
 
-    public void executaAcaoSemantica(int acaoSemantica) throws AnalisadorSemanticoException {
+    public void executaAcaoSemantica(int acaoSemantica, Integer penultimoValor, Integer antepenultimoValor) throws AnalisadorSemanticoException {
         switch (acaoSemantica) {
-            //#100  Inicialização de variáveis de controle utilizadas
+            // #100  Inicialização de variáveis de controle utilizadas
             //durante toda a análise semântica...
             case 100:
                 acaoSemantica100(acaoSemantica);
                 break;
+
+            // #104  Insere nome na tabela de símbolos...
+            case 104:
+                acaoSemantica104(acaoSemantica, penultimoValor, antepenultimoValor);
+                break;
+
+            // #107  Seta tipo de identificador = VARIÁVEL
+            case 107:
+                acaoSemantica107(acaoSemantica, penultimoValor, antepenultimoValor);
+                break;
+
             default:
                 lancarErro("Ação Semantica não mapeada: " + acaoSemantica);
         }
+    }
+
+    private void acaoSemantica104(int acaoSemantica, Integer penultimoValor, Integer antepenultimoValr) throws AnalisadorSemanticoException {
+        try {
+            if (this.tipoIdentificador.equals("VARIAVEL")) {
+                Simbolo penultimoSimbolo = getSimbolo(penultimoValor);
+                Simbolo simboloBusca = this.tabelaSimbolos.buscar(penultimoSimbolo);
+                if (simboloBusca == null) {
+                    Simbolo simbolo = new Simbolo(penultimoSimbolo.getNome(), "VARIAVEL", this.nivelAtual, this.deslocamento, 0);
+                    this.tabelaSimbolos.adicionar(simbolo);
+                    this.deslocamento += 1;
+                    this.nivel += 1;
+                } else {
+                    lancarErro("Erro semântico\nVariável \"" + penultimoSimbolo + "\" já foi declarada");
+                }
+            }
+        } catch (HashweissException e) {
+            lancarErro(e.getMessage());
+        }
+    }
+
+    private void acaoSemantica107(int acaoSemantica, Integer penultimoValor, Integer antepenultimoValr) {
+        this.tipoIdentificador = "VARIAVEL";
+        this.nivel = 0;
     }
 
     private void acaoSemantica100(int acaoSemantica) {
@@ -52,27 +89,28 @@ public class Semantico {
         this.repeats = new Pilha();
         this.procedures = new Pilha();
         this.nivel = 0;
+        this.deslocamento = 0;
         this.nivelAtual = 0;
 
         resultadoSemantico += "Executada Ação " + acaoSemantica;
     }
 
     public void tratarSemantico(int simboloTopoPilha, Integer penultimoValor, Integer antepenultimoValor) throws AnalisadorSemanticoException {
-        executaAcaoSemantica(simboloTopoPilha - ParserConstants.FIRST_SEMANTIC_ACTION);
+        executaAcaoSemantica(simboloTopoPilha - ParserConstants.FIRST_SEMANTIC_ACTION, penultimoValor, antepenultimoValor);
 
-     //  if(simbolo == null ){
-     //      throw new AnalisadorSemanticoException("Simbolo não encontrado!");
-     //  }
-     //  try {
-     //      tabelaSimbolos.buscar(simbolo);
-     //  } catch (HashweissException e) {
-     //      throw new AnalisadorSemanticoException(e.getMessage());
-     //  }
+        //  if(simbolo == null ){
+        //      throw new AnalisadorSemanticoException("Simbolo não encontrado!");
+        //  }
+        //  try {
+        //      tabelaSimbolos.buscar(simbolo);
+        //  } catch (HashweissException e) {
+        //      throw new AnalisadorSemanticoException(e.getMessage());
+        //  }
     }
 
     private Simbolo getSimbolo(int s) {
         for (Map.Entry<String, Token> token : words.entrySet()) {
-            if(token.getValue().tag == s)  {
+            if (token.getValue().tag == s) {
                 Simbolo simbolo = new Simbolo();
                 simbolo.setNome(token.getValue().descricao);
                 simbolo.setCategoria(token.getValue().descricao);

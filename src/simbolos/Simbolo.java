@@ -10,6 +10,17 @@ public class Simbolo {
 
     private Simbolo proximo;
 
+    public Simbolo() {
+    }
+
+    public Simbolo(String nome, String categoria, int nivel, int geralA, int geralB) {
+        this.nome = nome;
+        this.categoria = categoria;
+        this.nivel = nivel;
+        this.geralA = geralA;
+        this.geralB = geralB;
+    }
+
     public String getNome() {
         return nome;
     }

@@ -267,7 +267,9 @@ public class Hashweiss {
         Simbolo busca = simbolos[indexSimbolo];
 
         if (busca == null) {
-            throw new HashweissException("Não foi encontrado o Símbolo \"" + simbolo.getNome() + "\" para buscar!");
+            System.out.println("Não foi encontrado o Símbolo \"" + simbolo.getNome() + "\" para buscar!");
+            return null;
+            // throw new HashweissException("Não foi encontrado o Símbolo \"" + simbolo.getNome() + "\" para buscar!");
         }
 
         if (busca.getNome().equals(simbolo.getNome())) {
