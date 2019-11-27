@@ -6,9 +6,9 @@ import hipotetica.InstructionArea;
 import lexico.Token;
 import simbolos.Simbolo;
 import sintatico.ParserConstants;
-import sun.awt.Symbol;
 import util.HashweissException;
-import util.Pilha;
+
+import java.util.Stack;
 
 public class Semantico {
 
@@ -16,19 +16,14 @@ public class Semantico {
 
     private Simbolo procedureAtual;
 
-    private Pilha ifs;
-    private Pilha fors;
-    private Pilha whiles;
-    private Pilha parametros;
-    private Pilha cases;
-    private Pilha repeats;
-    private Pilha procedures;
+    private Stack<Simbolo> parametros;
+    private Stack<Desvio> desvios;
 
-    private int nivel = 0;
-    private int deslocamento = 0;
-    private int nivelAtual = 0;
-    private int variavel = 0;
     private int shift = 0;
+    private int variavel = 0;
+    private int nivelAtual = 0;
+    private int posicaoLivre = 0;
+    private int numeroParametro = 0;
     private boolean temParametros;
 
     private String tipoIdentificador;
@@ -75,10 +70,11 @@ public class Semantico {
             case 108:
                 acaoSemantica108(numeroAcaoSemantica, penultimoValor, antepenultimoValor);
                 break;
+
             case 109:
                 acaoSemantica109(numeroAcaoSemantica, penultimoValor, antepenultimoValor);
                 break;
-                
+
             default:
                 lancarErro("Ação Semantica não mapeada: " + numeroAcaoSemantica + "\n");
         }
@@ -86,6 +82,20 @@ public class Semantico {
     }
 
     private void acaoSemantica109(int numeroAcaoSemantica, Token penultimoValor, Token antepenultimoValor) {
+        if (temParametros) {
+            procedureAtual.setGeralB(numeroParametro);
+
+            for (int i = 1; i <= numeroParametro; i++) {
+                Simbolo simbolo = parametros.pop();
+                simbolo.setGeralA(i * -1);
+            }
+        }
+
+        hipotetica.addInstruction(InstructionArea.DSVS, -1, -1);
+        Desvio desvio = new Desvio();
+        desvio.ponteiro = hipotetica.intructionArea.LC;
+        desvio.parametro = numeroParametro;
+        desvios.add(desvio);
     }
 
     private void acaoSemantica108(int numeroAcaoSemantica, Token penultimoValor, Token antepenultimoValor) {
@@ -100,6 +110,7 @@ public class Semantico {
 
         procedureAtual = simbolo;
         temParametros = Boolean.FALSE;
+        numeroParametro = 0;
         nivelAtual++;
         shift = 3;
     }
@@ -112,18 +123,28 @@ public class Semantico {
 
     private void acaoSemantica104(int acaoSemantica, Token penultimoValor, Token antepenultimoValr) throws AnalisadorSemanticoException {
         try {
-            if (tipoIdentificador.equals(Simbolo.VARIAVEL)){
-                Simbolo penultimoSimbolo = getSimbolo(penultimoValor);
-                Simbolo simboloBusca = this.tabelaSimbolos.buscar(penultimoSimbolo);
+            Simbolo penultimoSimbolo = tokenToSimbolo(penultimoValor);
+
+            if (tipoIdentificador.equals(Simbolo.VARIAVEL)) {
+                Simbolo simboloBusca = tabelaSimbolos.buscar(penultimoSimbolo);
+
                 if (simboloBusca == null) {
-                    Simbolo simbolo = new Simbolo(penultimoSimbolo.getNome(), "VARIAVEL", this.nivelAtual, this.deslocamento, 0);
+                    Simbolo simbolo = new Simbolo(simboloBusca.getNome(), Simbolo.VARIAVEL, nivelAtual, shift, 0);
+                    simbolo.setGeralA(variavel + 2);
 
                     tabelaSimbolos.adicionar(simbolo);
-                    deslocamento += 1;
-                    nivel += 1;
+                    shift++;
+                    variavel++;
+
                 } else {
                     lancarErro("Erro semântico\nVariável \"" + penultimoSimbolo.getNome() + "\" já foi declarada");
                 }
+
+            } else if (tipoIdentificador.equals(Simbolo.PARAMETRO)) {
+                Simbolo simbolo = new Simbolo(penultimoSimbolo.getNome(), Simbolo.PARAMETRO, nivelAtual, -1, -1);
+                tabelaSimbolos.adicionar(simbolo);
+                numeroParametro++;
+                parametros.add(simbolo);
             }
         } catch (HashweissException e) {
             lancarErro(e.getMessage());
@@ -131,35 +152,31 @@ public class Semantico {
     }
 
     private void acaoSemantica107(int acaoSemantica, Token penultimoValor, Token antepenultimoValr) {
-        this.tipoIdentificador = "VARIAVEL";
-        this.nivel = 0;
+        this.tipoIdentificador = Simbolo.VARIAVEL;
     }
 
     private void acaoSemantica100() {
-        ifs = new Pilha();
-        fors = new Pilha();
-        whiles = new Pilha();
-        parametros = new Pilha();
-        cases = new Pilha();
-        repeats = new Pilha();
-        procedures = new Pilha();
+        parametros = new Stack<>();
         hipotetica = new Hipotetica();
-        nivel = 0;
-        deslocamento = 0;
-        nivelAtual = 0;
-        variavel = 0;
+        desvios = new Stack<>();
+
         shift = 3;
+        variavel = 0;
+        nivelAtual = 0;
+        posicaoLivre = 1;
+        numeroParametro = 0;
     }
 
     public void tratarSemantico(Token simboloTopoPilha, Token penultimoValor, Token antepenultimoValor) throws AnalisadorSemanticoException {
         executaAcaoSemantica(simboloTopoPilha, penultimoValor, antepenultimoValor);
     }
 
+    @Deprecated
     public void tratarSemantico(int simboloTopoPilha, Integer penultimoValor, Integer antepenultimoValor) throws AnalisadorSemanticoException {
         executaAcaoSemantica(simboloTopoPilha - ParserConstants.FIRST_SEMANTIC_ACTION, penultimoValor, antepenultimoValor);
     }
 
-    private Simbolo getSimbolo(Token token) {
+    private Simbolo tokenToSimbolo(Token token) {
         Simbolo simbolo = new Simbolo();
         simbolo.setNome(token.toString());
         simbolo.setCategoria(token.descricao);

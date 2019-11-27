@@ -23,6 +23,7 @@ public class Sintatico {
     private String resultadoSemantico;
     private List<Token> tokens;
 
+    @Deprecated
     public Sintatico(String fileName) throws FileNotFoundException {
         try {
             file = new FileReader(fileName);
@@ -37,6 +38,7 @@ public class Sintatico {
         this.tokens = tokens;
     }
 
+    @Deprecated
     private void readLine() throws IOException {
         line = reader.readLine();
     }
@@ -123,6 +125,7 @@ public class Sintatico {
         return resultado.toString();
     }
 
+    @Deprecated
     public String scanAll(Hashtable words, String resultadoSemantico) throws IOException, AnalisadorSintaticoException, AnalisadorSemanticoException {
         StringBuilder resultado = new StringBuilder();
         Pilha simbolos = novaPilha();
@@ -204,6 +207,7 @@ public class Sintatico {
         return resultado.toString();
     }
 
+    @Deprecated
     private void lancarErro(int simboloEsperado, int simboloRecebido) throws AnalisadorSintaticoException {
         throw new AnalisadorSintaticoException(ParserConstants.PARSER_ERROR[simboloEsperado - ParserConstants.FIRST_SEMANTIC_ACTION - ParserConstants.FIRST_NON_TERMINAL] + ", era esperado " + simboloEsperado + " porém foi recebido  " + simboloRecebido);
     }
@@ -217,6 +221,7 @@ public class Sintatico {
     }
 
     //primeiro parâmetro: tabela de símbolos, segundo valor pilha de entrada
+    @Deprecated
     private boolean estaNaMatrizParse(int X, int a) {
         return obterMatrizParse(X, a) >= 0;
     }
@@ -226,6 +231,7 @@ public class Sintatico {
     }
 
     //primeiro parâmetro: tabela de símbolos, segundo valor pilha de entrada
+    @Deprecated
     private int obterMatrizParse(int X, int a) {
         return Constants.PARSER_TABLE[X - ParserConstants.START_SYMBOL][a - 1];
     }
@@ -235,6 +241,7 @@ public class Sintatico {
     }
 
     //Inicia a pilha de simbolos com
+    @Deprecated
     private Pilha novaPilha() {
         Pilha pilha = new Pilha();
         pilha.empilhar(Constants.DOLLAR);
@@ -251,6 +258,7 @@ public class Sintatico {
         return pilha;
     }
 
+    @Deprecated
     private boolean isTerminal(int token) {
         return token > Constants.DOLLAR && token < Constants.FIRST_NON_TERMINAL;
     }
@@ -259,6 +267,7 @@ public class Sintatico {
         return token.tag > Constants.DOLLAR && token.tag < Constants.FIRST_NON_TERMINAL;
     }
 
+    @Deprecated
     private boolean isNaoTerminal(int token) {
         return token >= Constants.FIRST_NON_TERMINAL && token < Constants.FIRST_SEMANTIC_ACTION;
     }
