@@ -21,7 +21,9 @@ public class AnalisadorSemantico {
     private Hashweiss tabelaSimbolos = new Hashweiss();
     private Stack<Simbolo> parametros;
     private Stack<Desvio> desvios;
+    private Stack<Integer> ifs;
     private Simbolo procedureAtual;
+    private Simbolo parteEsquerda;
 
     private int shift = 0;
     private int variavel = 0;
@@ -83,6 +85,14 @@ public class AnalisadorSemantico {
                 acaoSemantica109();
                 break;
 
+            case 114:
+                acaoSemantica114();
+                break;
+
+            case 120:
+                acaoSemantica120();
+                break;
+
             case 128:
                 acaoSemantica128();
                 break;
@@ -103,6 +113,25 @@ public class AnalisadorSemantico {
                 lancarErro("Ação Semantica não mapeada: " + numeroAcaoSemantica + "\n");
         }
         resultadoSemantico = "Executada Ação " + numeroAcaoSemantica + "\n";
+    }
+
+    private void acaoSemantica114() throws AnalisadorSemanticoException {
+        try {
+            Simbolo simbolo = tabelaSimbolos.buscar(tokenToSimbolo(ultimoToken));
+            if (Simbolo.VARIAVEL.equals(simbolo.getCategoria())) {
+                parteEsquerda = simbolo;
+            } else {
+                throw new AnalisadorSemanticoException("ERRO 114: Símbolo é uma variável");
+            }
+        } catch (HashweissException e) {
+            e.printStackTrace();
+            throw new AnalisadorSemanticoException(e.getMessage());
+        }
+    }
+
+    private void acaoSemantica120() {
+        this.hipotetica.addInstruction(InstructionArea.DSVF, -1, -1);
+        ifs.add(hipotetica.intructionArea.LC - 1);
     }
 
     private void acaoSemantica141() {
@@ -229,8 +258,11 @@ public class AnalisadorSemantico {
         parametros = new Stack<>();
         hipotetica = new Hipotetica();
         desvios = new Stack<>();
+        ifs = new Stack<>();
         tokensTerminais.clear();
         ultimoToken = null;
+        procedureAtual = null;
+        parteEsquerda = null;
 
         shift = 3;
         variavel = 0;
