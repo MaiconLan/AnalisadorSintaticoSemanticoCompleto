@@ -103,7 +103,7 @@ public class Sintatico {
                 }
 
             } else {
-                semantico.tratarSemantico(simboloTopoPilha, entrada.exibePenultimoValor(), entrada.exibeAntepenultimoValor());
+                semantico.tratarSemantico(simboloTopoPilha, entrada.exibeUltimoValor(), entrada.exibePenultimoValor());
                 resultadoSemantico += semantico.getResultadoSemantico();
                 simbolos.desempilhar();
             }

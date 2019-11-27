@@ -78,7 +78,7 @@ public class Semantico {
             default:
                 lancarErro("Ação Semantica não mapeada: " + numeroAcaoSemantica + "\n");
         }
-        resultadoSemantico = "Executada Ação " + acaoSemantica + "\n";
+        resultadoSemantico = "Executada Ação " + numeroAcaoSemantica + "\n";
     }
 
     private void acaoSemantica109(int numeroAcaoSemantica, Token penultimoValor, Token antepenultimoValor) {
