@@ -3,7 +3,7 @@ package sintatico;
 import lexico.ConstantesTerminais;
 import lexico.Token;
 import semantico.AnalisadorSemanticoException;
-import semantico.Semantico;
+import semantico.AnalisadorSemantico;
 import util.Pilha;
 import util.PilhaToken;
 
@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -47,15 +46,13 @@ public class Sintatico {
         StringBuilder resultado = new StringBuilder();
         PilhaToken simbolos = novaPilhaToken();
         PilhaToken entrada = new PilhaToken();
-        List<Token> tokensDispostos = new ArrayList<>();
 
         //preenche a pilha de entrada de trás pra frente
         for (int i = tokens.size() - 1; i >= 0; i--) {
             entrada.empilhar(tokens.get(i));
-            tokensDispostos.add(tokens.get(i));
         }
 
-        Semantico semantico = new Semantico();
+        AnalisadorSemantico analisadorSemantico = new AnalisadorSemantico();
 
         do {
             //pega o simbolo do topo  pilha
@@ -68,6 +65,8 @@ public class Sintatico {
 
             //verifica se o topo da pilha de simbolos é terminal
             if (isTerminal(simboloTopoPilha) || simbolos.pilhaVazia()) {
+                analisadorSemantico.setUltimoToken(entrada.exibeUltimoValor());
+                analisadorSemantico.tokensTerminais.add(entrada.exibeUltimoValor());
                 //verifica se o topo da pilha de simbolos é igual ao topo da pilha de entrada
                 if (simboloTopoPilha.tag == entrada.exibeUltimoValor().tag) {
                     resultado.append("Desempilhando: " + simbolos.desempilhar() + "-" + entrada.desempilhar() + "\n");
@@ -103,8 +102,8 @@ public class Sintatico {
                 }
 
             } else {
-                semantico.tratarSemantico(simboloTopoPilha, entrada.exibeUltimoValor(), entrada.exibePenultimoValor());
-                resultadoSemantico += semantico.getResultadoSemantico();
+                analisadorSemantico.tratarSemantico(simboloTopoPilha);
+                resultadoSemantico += analisadorSemantico.getResultadoSemantico();
                 simbolos.desempilhar();
             }
 
@@ -130,7 +129,7 @@ public class Sintatico {
         StringBuilder resultado = new StringBuilder();
         Pilha simbolos = novaPilha();
         Pilha entrada = new Pilha();
-        Semantico semantico = new Semantico();
+        AnalisadorSemantico analisadorSemantico = new AnalisadorSemantico();
 
         readLine();
         String[] arrayEntrada = line.split(" ");
@@ -185,8 +184,8 @@ public class Sintatico {
                 }
 
             } else {
-                semantico.tratarSemantico(simboloTopoPilha, entrada.exibePenultimoValor(), entrada.exibeAntepenultimoValor());
-                resultadoSemantico += semantico.getResultadoSemantico();
+                analisadorSemantico.tratarSemantico(simboloTopoPilha, entrada.exibePenultimoValor(), entrada.exibeAntepenultimoValor());
+                resultadoSemantico += analisadorSemantico.getResultadoSemantico();
                 simbolos.desempilhar();
             }
 
