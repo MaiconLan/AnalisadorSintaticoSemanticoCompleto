@@ -2,6 +2,12 @@ package simbolos;
 
 public class Simbolo {
 
+    public static final String VARIAVEL = "VARIAVEL";
+    public static final String CONSTANTE = "CONSTANTE";
+    public static final String PROCEDURE = "PROCEDURE";
+    public static final String PARAMETRO = "PARAMETRO";
+    public static final String ROTULO = "ROTULO";
+
     private String nome;
     private String categoria;
     private int nivel;

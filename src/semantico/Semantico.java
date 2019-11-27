@@ -6,12 +6,15 @@ import hipotetica.InstructionArea;
 import lexico.Token;
 import simbolos.Simbolo;
 import sintatico.ParserConstants;
+import sun.awt.Symbol;
 import util.HashweissException;
 import util.Pilha;
 
 public class Semantico {
 
     private Hashweiss tabelaSimbolos = new Hashweiss();
+
+    private Simbolo procedureAtual;
 
     private Pilha ifs;
     private Pilha fors;
@@ -26,9 +29,9 @@ public class Semantico {
     private int nivelAtual = 0;
     private int variavel = 0;
     private int shift = 0;
+    private boolean temParametros;
 
     private String tipoIdentificador;
-
     private String resultadoSemantico = "";
 
     public Hipotetica hipotetica;
@@ -63,10 +66,42 @@ public class Semantico {
                 acaoSemantica107(numeroAcaoSemantica, penultimoValor, antepenultimoValor);
                 break;
 
+            // #108: Após nome de procedure, em declaração faz:
+            // -categoria := proc
+            // -inserção
+            // -houve_parametros := false
+            // -n_par := 0
+            // -incrementa nível (Nível_atual:= nível_atual + 1)
+            case 108:
+                acaoSemantica108(numeroAcaoSemantica, penultimoValor, antepenultimoValor);
+                break;
+            case 109:
+                acaoSemantica109(numeroAcaoSemantica, penultimoValor, antepenultimoValor);
+                break;
+                
             default:
                 lancarErro("Ação Semantica não mapeada: " + numeroAcaoSemantica + "\n");
         }
         resultadoSemantico = "Executada Ação " + acaoSemantica + "\n";
+    }
+
+    private void acaoSemantica109(int numeroAcaoSemantica, Token penultimoValor, Token antepenultimoValor) {
+    }
+
+    private void acaoSemantica108(int numeroAcaoSemantica, Token penultimoValor, Token antepenultimoValor) {
+        //categoria := proc
+        //inserção
+        //houve_parametros := false
+        //n_par := 0
+        //incrementa nível (Nível_atual:= nível_atual + 1)
+
+        Simbolo simbolo = new Simbolo(penultimoValor.toString(), Simbolo.PROCEDURE, this.nivelAtual, hipotetica.intructionArea.LC + 1, -1);
+        tabelaSimbolos.adicionar(simbolo);
+
+        procedureAtual = simbolo;
+        temParametros = Boolean.FALSE;
+        nivelAtual++;
+        shift = 3;
     }
 
     private void acaoSemantica102() {
@@ -77,7 +112,7 @@ public class Semantico {
 
     private void acaoSemantica104(int acaoSemantica, Token penultimoValor, Token antepenultimoValr) throws AnalisadorSemanticoException {
         try {
-            if (tipoIdentificador.equals("VARIAVEL")) {
+            if (tipoIdentificador.equals(Simbolo.VARIAVEL)){
                 Simbolo penultimoSimbolo = getSimbolo(penultimoValor);
                 Simbolo simboloBusca = this.tabelaSimbolos.buscar(penultimoSimbolo);
                 if (simboloBusca == null) {
