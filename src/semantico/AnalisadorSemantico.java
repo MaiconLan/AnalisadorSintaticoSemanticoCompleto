@@ -89,10 +89,18 @@ public class AnalisadorSemantico {
                 acaoSemantica114();
                 break;
 
+            case 115:
+                acaoSemantica115();
+                break;
+
             case 120:
                 acaoSemantica120();
                 break;
 
+            case 122:
+                acaoSemantica122();
+                break;
+            
             case 128:
                 acaoSemantica128();
                 break;
@@ -105,23 +113,46 @@ public class AnalisadorSemantico {
                 acaoSemantica141();
                 break;
 
+            case 148:
+                acaoSemantica148();
+                break;
+                
             case 156:
                 acaoSemantica156();
                 break;
 
             default:
-                lancarErro("Ação Semantica não mapeada: " + numeroAcaoSemantica + "\n");
+                lancarErro("ação semântica não mapeada: " + numeroAcaoSemantica + "\n");
         }
         resultadoSemantico = "Executada Ação " + numeroAcaoSemantica + "\n";
+    }
+
+    private void acaoSemantica122() {
+        hipotetica.alterInstruction(ifs.pop(), 0, hipotetica.intructionArea.LC + 1);
+        hipotetica.addInstruction(InstructionArea.DSVS, 0, 0);
+        ifs.add(hipotetica.intructionArea.LC - 1);
+    }
+
+    private void acaoSemantica115() {
+        this.hipotetica.addInstruction(InstructionArea.ARMZ, nivelAtual - parteEsquerda.getNivel(), parteEsquerda.getGeralA());
+    }
+
+    private void acaoSemantica148() {
+        hipotetica.addInstruction(InstructionArea.SOMA, -1, -1);
     }
 
     private void acaoSemantica114() throws AnalisadorSemanticoException {
         try {
             Simbolo simbolo = tabelaSimbolos.buscar(tokenToSimbolo(ultimoToken));
+
+            if(simbolo == null) {
+                throw new AnalisadorSemanticoException("Erro na ação semântica 114: O Símbolo " + ultimoToken.toString() + " não foi declarado!");
+            }
+
             if (Simbolo.VARIAVEL.equals(simbolo.getCategoria())) {
                 parteEsquerda = simbolo;
             } else {
-                throw new AnalisadorSemanticoException("ERRO 114: Símbolo é uma variável");
+                throw new AnalisadorSemanticoException("Erro na ação semântica 114: O Símbolo " + simbolo.getNome() + " é uma variável");
             }
         } catch (HashweissException e) {
             e.printStackTrace();
@@ -151,12 +182,12 @@ public class AnalisadorSemantico {
                     this.hipotetica.addInstruction(InstructionArea.LEIT, -1, -1);
                     this.hipotetica.addInstruction(InstructionArea.ARMZ, nivelAtual - simbolo.getNivel(), simbolo.getGeralA());
                 } else {
-                    throw new AnalisadorSemanticoException("ERRO 129: O Símbolo " + simbolo.getNome() + " não é uma variável!");
+                    throw new AnalisadorSemanticoException("Erro na ação semântica 129: O Símbolo " + simbolo.getNome() + " não é uma variável!");
                 }
 
             } else if (CONTEXTO_EXPRESSAO.equals(contexto)) {
                 if (Simbolo.PROCEDURE.equals(simbolo.getCategoria())) {
-                    throw new AnalisadorSemanticoException("ERRO 129: Símbolo " + simbolo.getNome() + " é uma procedure");
+                    throw new AnalisadorSemanticoException("Erro na ação semântica 129: Símbolo " + simbolo.getNome() + " é uma procedure");
                 }
                 if (Simbolo.CONSTANTE.equals(simbolo.getCategoria())) {
                     this.hipotetica.addInstruction(InstructionArea.CRCT, 0, simbolo.getGeralA());
@@ -242,7 +273,7 @@ public class AnalisadorSemantico {
                     break;
 
                 default:
-                    lancarErro("Acao semantica 104 possui simbolo não configurado!");
+                    lancarErro("Ação semântica 104 possui simbolo não configurado!");
                     break;
             }
         } catch (HashweissException e) {
