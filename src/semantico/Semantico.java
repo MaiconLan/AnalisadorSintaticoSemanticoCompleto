@@ -129,7 +129,7 @@ public class Semantico {
                 Simbolo simboloBusca = tabelaSimbolos.buscar(penultimoSimbolo);
 
                 if (simboloBusca == null) {
-                    Simbolo simbolo = new Simbolo(simboloBusca.getNome(), Simbolo.VARIAVEL, nivelAtual, shift, 0);
+                    Simbolo simbolo = new Simbolo(penultimoSimbolo.getNome(), Simbolo.VARIAVEL, nivelAtual, shift, 0);
                     simbolo.setGeralA(variavel + 2);
 
                     tabelaSimbolos.adicionar(simbolo);
