@@ -1,6 +1,5 @@
 package lexico;
 
-import sintatico.AnalisadorLexicoException;
 import util.Util;
 
 import java.io.*;

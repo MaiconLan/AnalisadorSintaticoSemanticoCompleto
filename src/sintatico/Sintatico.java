@@ -1,8 +1,9 @@
 package sintatico;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import lexico.ConstantesTerminais;
 import lexico.Token;
+import semantico.AnalisadorSemanticoException;
+import semantico.Semantico;
 import util.Pilha;
 import util.PilhaToken;
 

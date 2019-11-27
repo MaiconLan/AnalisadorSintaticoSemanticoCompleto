@@ -1,12 +1,13 @@
-package sintatico;
+package semantico;
 
 import hashweiss.Hashweiss;
+import hipotetica.Hipotetica;
+import hipotetica.InstructionArea;
 import lexico.Token;
 import simbolos.Simbolo;
+import sintatico.ParserConstants;
 import util.HashweissException;
 import util.Pilha;
-
-import java.util.Hashtable;
 
 public class Semantico {
 
@@ -23,10 +24,14 @@ public class Semantico {
     private int nivel = 0;
     private int deslocamento = 0;
     private int nivelAtual = 0;
+    private int variavel = 0;
+    private int shift = 0;
 
     private String tipoIdentificador;
 
     private String resultadoSemantico = "";
+
+    public Hipotetica hipotetica;
 
     public Semantico() {
     }
@@ -65,7 +70,9 @@ public class Semantico {
     }
 
     private void acaoSemantica102() {
-
+        shift = 3;
+        hipotetica.addInstruction(InstructionArea.AMEM, -1, shift + variavel);
+        variavel = 0;
     }
 
     private void acaoSemantica104(int acaoSemantica, Token penultimoValor, Token antepenultimoValr) throws AnalisadorSemanticoException {
@@ -94,16 +101,19 @@ public class Semantico {
     }
 
     private void acaoSemantica100() {
-        this.ifs = new Pilha();
-        this.fors = new Pilha();
-        this.whiles = new Pilha();
-        this.parametros = new Pilha();
-        this.cases = new Pilha();
-        this.repeats = new Pilha();
-        this.procedures = new Pilha();
-        this.nivel = 0;
-        this.deslocamento = 0;
-        this.nivelAtual = 0;
+        ifs = new Pilha();
+        fors = new Pilha();
+        whiles = new Pilha();
+        parametros = new Pilha();
+        cases = new Pilha();
+        repeats = new Pilha();
+        procedures = new Pilha();
+        hipotetica = new Hipotetica();
+        nivel = 0;
+        deslocamento = 0;
+        nivelAtual = 0;
+        variavel = 0;
+        shift = 3;
     }
 
     public void tratarSemantico(Token simboloTopoPilha, Token penultimoValor, Token antepenultimoValor) throws AnalisadorSemanticoException {
@@ -112,15 +122,6 @@ public class Semantico {
 
     public void tratarSemantico(int simboloTopoPilha, Integer penultimoValor, Integer antepenultimoValor) throws AnalisadorSemanticoException {
         executaAcaoSemantica(simboloTopoPilha - ParserConstants.FIRST_SEMANTIC_ACTION, penultimoValor, antepenultimoValor);
-
-        //  if(simbolo == null ){
-        //      throw new AnalisadorSemanticoException("Simbolo não encontrado!");
-        //  }
-        //  try {
-        //      tabelaSimbolos.buscar(simbolo);
-        //  } catch (HashweissException e) {
-        //      throw new AnalisadorSemanticoException(e.getMessage());
-        //  }
     }
 
     private Simbolo getSimbolo(Token token) {

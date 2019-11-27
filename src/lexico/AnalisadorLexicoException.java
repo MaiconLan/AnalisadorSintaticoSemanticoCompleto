@@ -1,4 +1,4 @@
-package sintatico;
+package lexico;
 
 public class AnalisadorLexicoException extends Exception {
 

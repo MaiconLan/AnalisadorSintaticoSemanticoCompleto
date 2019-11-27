@@ -6,11 +6,10 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import lexico.Lexico;
 import lexico.Token;
-import sintatico.AnalisadorLexicoException;
-import sintatico.AnalisadorSemanticoException;
+import lexico.AnalisadorLexicoException;
+import semantico.AnalisadorSemanticoException;
 import sintatico.AnalisadorSintaticoException;
 import sintatico.Sintatico;
-import util.Util;
 
 import java.io.*;
 import java.util.List;
