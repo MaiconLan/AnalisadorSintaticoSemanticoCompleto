@@ -46,8 +46,8 @@ public class Controller {
             FileReader fileReader = new FileReader(f);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
+            String codigo = bufferedReader.readLine() + "\n";
             String linha = bufferedReader.readLine();
-            String codigo = bufferedReader.readLine();
             while (linha != null) {
                 codigo += linha + "\n";
                 linha = bufferedReader.readLine();
@@ -63,17 +63,19 @@ public class Controller {
 
             this.resultadoLexico.setText(resultadoLexico);
             this.resultadoSintatico.setText(resultadoSintatico);
-            this.resultadoSemantico.setText(resultadoSemantico);
+            this.resultadoSemantico.setText(sintatico.getResultadoSemantico());
 
         } catch (IOException e) {
             e.printStackTrace();
 
         } catch (AnalisadorLexicoException e) {
             this.resultadoLexico.setText(resultadoLexico + "\n" + e.getMessage());
-
+            this.resultadoSintatico.setText("");
+            this.resultadoSemantico.setText("");
         } catch (AnalisadorSintaticoException e) {
             this.resultadoLexico.setText(resultadoLexico);
             this.resultadoSintatico.setText(resultadoSintatico + "\n" + e.getMessage());
+            this.resultadoSemantico.setText("");
         } catch (AnalisadorSemanticoException e) {
             this.resultadoLexico.setText(resultadoLexico);
             this.resultadoSintatico.setText(resultadoSintatico);

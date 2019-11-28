@@ -221,6 +221,9 @@ public class AnalisadorSemantico {
     private void acaoSemantica116() throws AnalisadorSemanticoException {
         try {
             Simbolo simbolo = tabelaSimbolos.buscar(tokenToSimbolo(ultimoToken));
+            if(simbolo == null) {
+                throw new AnalisadorSemanticoException("Erro na ação semântica 116: Símbolo " + ultimoToken.toString() + " não foi declarado!!");
+            }
             if (Simbolo.PROCEDURE.equals(simbolo.getCategoria())) {
                 procedureAtual = simbolo;
             } else {
@@ -439,5 +442,15 @@ public class AnalisadorSemantico {
     public void setUltimoToken(Token ultimoToken) {
         this.ultimoToken = ultimoToken;
         System.err.println("Token: " + ultimoToken.toString());
+    }
+
+    public String getTabelaTokens() {
+        String tokens = " Código   |   Token  |   Descrição \n";
+
+        for (Token token : tokensTerminais) {
+            tokens += token.tag + "     |    " + token.toString() + "   |   " + token.descricao + "\n";
+        }
+
+        return tokens;
     }
 }

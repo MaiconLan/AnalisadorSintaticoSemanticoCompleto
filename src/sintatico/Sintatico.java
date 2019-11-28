@@ -79,6 +79,8 @@ public class Sintatico {
                 //verifica se o topo da pilha de simbolos é não terminal
             } else if (isNaoTerminal(simboloTopoPilha)) {
 
+                boolean teste = estaNaMatrizParse(simboloTopoPilha, entrada.exibeUltimoValor());
+
                 //verifica se o não terminal está na matriz de parse
                 if (estaNaMatrizParse(simboloTopoPilha, entrada.exibeUltimoValor())) {
                     simbolos.desempilhar();
@@ -112,6 +114,7 @@ public class Sintatico {
 
         } while (!simbolos.pilhaVazia());
 
+        resultadoSemantico = analisadorSemantico.getTabelaTokens();
         resultado.append("\nSimbolos");
         for (Token token : simbolos.pilha) {
             if (token != null)
@@ -276,5 +279,9 @@ public class Sintatico {
 
     private boolean isNaoTerminal(Token token) {
         return token.tag >= Constants.FIRST_NON_TERMINAL && token.tag < Constants.FIRST_SEMANTIC_ACTION;
+    }
+
+    public String getResultadoSemantico() {
+        return resultadoSemantico;
     }
 }
