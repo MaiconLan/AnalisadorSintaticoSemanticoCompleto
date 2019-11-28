@@ -102,8 +102,11 @@ public class Sintatico {
                 }
 
             } else {
-                analisadorSemantico.tratarSemantico(simboloTopoPilha);
-                resultadoSemantico += analisadorSemantico.getResultadoSemantico();
+                if(simboloTopoPilha.tag != Constants.DOLLAR) {
+
+                    analisadorSemantico.tratarSemantico(simboloTopoPilha);
+                    resultadoSemantico += analisadorSemantico.getResultadoSemantico();
+                }
                 simbolos.desempilhar();
             }
 
@@ -208,11 +211,11 @@ public class Sintatico {
 
     @Deprecated
     private void lancarErro(int simboloEsperado, int simboloRecebido) throws AnalisadorSintaticoException {
-        throw new AnalisadorSintaticoException(ParserConstants.PARSER_ERROR[simboloEsperado - ParserConstants.FIRST_SEMANTIC_ACTION - ParserConstants.FIRST_NON_TERMINAL] + ", era esperado " + simboloEsperado + " porém foi recebido  " + simboloRecebido);
+        throw new AnalisadorSintaticoException(ParserConstants.PARSER_ERROR[simboloEsperado - ParserConstants.FIRST_SEMANTIC_ACTION - ParserConstants.FIRST_NON_TERMINAL] + ", era esperado " + simboloEsperado + " porém foi recebido " + simboloRecebido);
     }
 
     private void lancarErro(Token simboloEsperado, Token simboloRecebido) throws AnalisadorSintaticoException {
-        throw new AnalisadorSintaticoException(ParserConstants.PARSER_ERROR[simboloEsperado.tag - ParserConstants.FIRST_SEMANTIC_ACTION - ParserConstants.FIRST_NON_TERMINAL] + ", era esperado " + simboloEsperado.toString() + " porém foi recebido  " + simboloRecebido.toString());
+        throw new AnalisadorSintaticoException(ParserConstants.PARSER_ERROR[simboloEsperado.tag] + ". Recebido " + simboloRecebido.toString());
     }
 
     private int[] obterRegrasProducao(int idMatrizParse) {

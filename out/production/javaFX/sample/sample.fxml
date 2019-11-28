@@ -66,8 +66,8 @@
                         <Font size="24.0" />
                      </font>
                   </Text>
-                  <Text fx:id="arquivo11" strokeType="OUTSIDE" strokeWidth="0.0" text="Equipe: Maicon Lanzendorf (Irmão da Nathy)" />
-                  <Text fx:id="arquivo111" strokeType="OUTSIDE" strokeWidth="0.0" text="Renan Zapelini do Nascimento (Não é parente do Clavison)" />
+                  <Text fx:id="arquivo11" strokeType="OUTSIDE" strokeWidth="0.0" text="Equipe: Maicon Lanzendorf " />
+                  <Text fx:id="arquivo111" strokeType="OUTSIDE" strokeWidth="0.0" text="Renan Zapelini do Nascimento " />
                </children>
             </VBox>
          </top>

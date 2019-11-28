@@ -3,6 +3,8 @@ package hashweiss;
 import simbolos.Simbolo;
 import util.HashweissException;
 
+import java.util.Stack;
+
 public class Hashweiss {
 
     /*
@@ -14,7 +16,7 @@ public class Hashweiss {
 
     private final int TAMANHO_TABELA = 25143;
     private Simbolo[] simbolos = new Simbolo[TAMANHO_TABELA];  //Inicialização
-    
+
     public void trabalho2() throws HashweissException {
         Simbolo simbolo = new Simbolo();
         simbolo.setNome("Token");
@@ -363,7 +365,28 @@ public class Hashweiss {
                 atual = atual.getProximo();
             } while (atual != null);
         }
+    }
 
+    public void removerPorNivel(int nivelAtual) throws HashweissException {
+        buscarPorNivel(nivelAtual);
 
+        Stack<Simbolo> symbolStack = buscarPorNivel(nivelAtual);
+        while (!symbolStack.empty()) {
+            remover(symbolStack.pop());
+        }
+    }
+
+    public Stack<Simbolo> buscarPorNivel(int nivel) {
+        Stack<Simbolo> symbolStack = new Stack<>();
+        for (int i = 0; i < TAMANHO_TABELA; i++) {
+            if (simbolos[i] != null && simbolos[i].getNivel() == nivel) {
+                symbolStack.add(simbolos[i]);
+                while (simbolos[i].getProximo() != null) {
+                    if (simbolos[i].getNivel() == nivel)
+                        symbolStack.add(simbolos[i]);
+                }
+            }
+        }
+        return symbolStack;
     }
 }

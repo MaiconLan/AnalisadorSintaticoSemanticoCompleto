@@ -29,7 +29,8 @@ public class AnalisadorSemantico {
     private int variavel = 0;
     private int nivelAtual = 0;
     private int posicaoLivre = 0;
-    private int numeroParametro = 0;
+    private int numeroParametros = 0;
+    private int numeroParametrosEfetivos = 0;
     private boolean temParametros;
     private String contexto;
 
@@ -54,6 +55,11 @@ public class AnalisadorSemantico {
             // #100  Inicialização de variáveis de controle utilizadas durante toda a análise semântica...
             case 100:
                 acaoSemantica100();
+                break;
+
+            // Gera instrução AMEM utilizando como base o número de ações acumuladas na ação #104
+            case 101:
+                acaoSemantica101();
                 break;
 
             // Gera instrução AMEM utilizando como base o número de ações acumuladas na ação #104
@@ -85,6 +91,10 @@ public class AnalisadorSemantico {
                 acaoSemantica109();
                 break;
 
+            case 110:
+                acaoSemantica110();
+                break;
+
             case 114:
                 acaoSemantica114();
                 break;
@@ -93,14 +103,30 @@ public class AnalisadorSemantico {
                 acaoSemantica115();
                 break;
 
+            case 116:
+                acaoSemantica116();
+                break;
+
+            case 117:
+                acaoSemantica117();
+                break;
+
+            case 118:
+                acaoSemantica118();
+                break;
+
             case 120:
                 acaoSemantica120();
+                break;
+
+            case 121:
+                acaoSemantica121();
                 break;
 
             case 122:
                 acaoSemantica122();
                 break;
-            
+
             case 128:
                 acaoSemantica128();
                 break;
@@ -109,12 +135,28 @@ public class AnalisadorSemantico {
                 acaoSemantica129();
                 break;
 
+            case 130:
+                acaoSemantica130();
+                break;
+
+            case 131:
+                acaoSemantica131();
+                break;
+
             case 141:
                 acaoSemantica141();
                 break;
 
+            case 143:
+                acaoSemantica143();
+                break;
+
             case 148:
                 acaoSemantica148();
+                break;
+
+            case 149:
+                acaoSemantica149();
                 break;
                 
             case 156:
@@ -125,6 +167,73 @@ public class AnalisadorSemantico {
                 lancarErro("ação semântica não mapeada: " + numeroAcaoSemantica + "\n");
         }
         resultadoSemantico = "Executada Ação " + numeroAcaoSemantica + "\n";
+    }
+
+    private void acaoSemantica101() {
+        this.hipotetica.addInstruction(InstructionArea.PARA, -1, -1);
+    }
+
+    private void acaoSemantica131() {
+        hipotetica.addInstruction(InstructionArea.IMPR, -1, -1);
+    }
+
+    private void acaoSemantica130() {
+        hipotetica.addLiteralArea(ultimoToken.descricao);
+        hipotetica.addInstruction(InstructionArea.IMPRL, -1, hipotetica.instructionliteralarea.LIT - 1);
+    }
+
+    private void acaoSemantica143() {
+        hipotetica.addInstruction(InstructionArea.CMMA, -1, -1);
+    }
+
+    private void acaoSemantica110() throws AnalisadorSemanticoException {
+        Desvio desvio = desvios.pop();
+        this.hipotetica.addInstruction(InstructionArea.RETU, -1, desvio.parametro);
+        this.hipotetica.intructionArea.instructions[desvio.ponteiro - 1].op2 = this.hipotetica.intructionArea.LC;
+        // deleta nomes do escopo do nível na TS;
+        try {
+            tabelaSimbolos.removerPorNivel(nivelAtual);
+        } catch (HashweissException e) {
+            e.printStackTrace();
+            throw new AnalisadorSemanticoException(e.getMessage());
+        }
+        nivelAtual--;
+    }
+
+    private void acaoSemantica121() {
+        hipotetica.alterInstruction(ifs.pop(), 0, hipotetica.intructionArea.LC + 1);
+        ifs.add(hipotetica.intructionArea.LC);
+    }
+
+    private void acaoSemantica118() {
+        numeroParametrosEfetivos++;
+    }
+
+    private void acaoSemantica117() throws AnalisadorSemanticoException {
+        if (numeroParametrosEfetivos > 0 && procedureAtual.getGeralB() != numeroParametrosEfetivos) {
+            throw new AnalisadorSemanticoException("Erro na ação semântica 117: Número de parâmetros diferente do número de parâmetros efetivos!");
+        } else {
+            hipotetica.addInstruction(InstructionArea.CALL, -1, procedureAtual.getGeralA());
+            numeroParametrosEfetivos = 0;
+        }
+    }
+
+    private void acaoSemantica116() throws AnalisadorSemanticoException {
+        try {
+            Simbolo simbolo = tabelaSimbolos.buscar(tokenToSimbolo(ultimoToken));
+            if (Simbolo.PROCEDURE.equals(simbolo.getCategoria())) {
+                procedureAtual = simbolo;
+            } else {
+                throw new AnalisadorSemanticoException("Erro na ação semântica 116: Símbolo " + simbolo.getNome() + " não é uma procedure!");
+            }
+        } catch (HashweissException e) {
+            e.printStackTrace();
+            throw new AnalisadorSemanticoException(e.getMessage());
+        }
+    }
+
+    private void acaoSemantica149() {
+        hipotetica.addInstruction(InstructionArea.SUBT, -1, -1);
     }
 
     private void acaoSemantica122() {
@@ -145,7 +254,7 @@ public class AnalisadorSemantico {
         try {
             Simbolo simbolo = tabelaSimbolos.buscar(tokenToSimbolo(ultimoToken));
 
-            if(simbolo == null) {
+            if (simbolo == null) {
                 throw new AnalisadorSemanticoException("Erro na ação semântica 114: O Símbolo " + ultimoToken.toString() + " não foi declarado!");
             }
 
@@ -207,9 +316,9 @@ public class AnalisadorSemantico {
 
     private void acaoSemantica109() {
         if (temParametros) {
-            procedureAtual.setGeralB(numeroParametro);
+            procedureAtual.setGeralB(numeroParametros);
 
-            for (int i = 1; i <= numeroParametro; i++) {
+            for (int i = 1; i <= numeroParametros; i++) {
                 Simbolo simbolo = parametros.pop();
                 simbolo.setGeralA(i * -1);
             }
@@ -218,7 +327,7 @@ public class AnalisadorSemantico {
         hipotetica.addInstruction(InstructionArea.DSVS, -1, -1);
         Desvio desvio = new Desvio();
         desvio.ponteiro = hipotetica.intructionArea.LC;
-        desvio.parametro = numeroParametro;
+        desvio.parametro = numeroParametros;
         desvios.add(desvio);
     }
 
@@ -234,7 +343,7 @@ public class AnalisadorSemantico {
 
         procedureAtual = simbolo;
         temParametros = Boolean.FALSE;
-        numeroParametro = 0;
+        numeroParametros = 0;
         nivelAtual++;
         shift = 3;
     }
@@ -268,7 +377,7 @@ public class AnalisadorSemantico {
                 case Simbolo.PARAMETRO:
                     Simbolo simbolo = new Simbolo(penultimoSimbolo.getNome(), Simbolo.PARAMETRO, nivelAtual, -1, -1);
                     tabelaSimbolos.adicionar(simbolo);
-                    numeroParametro++;
+                    numeroParametros++;
                     parametros.add(simbolo);
                     break;
 
@@ -299,7 +408,8 @@ public class AnalisadorSemantico {
         variavel = 0;
         nivelAtual = 0;
         posicaoLivre = 1;
-        numeroParametro = 0;
+        numeroParametros = 0;
+        numeroParametrosEfetivos = 0;
     }
 
     public void tratarSemantico(Token simboloTopoPilha) throws AnalisadorSemanticoException {

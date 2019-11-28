@@ -24,7 +24,8 @@ public class ConstantesTerminais extends Token {
     public static final ConstantesTerminais DIVISAO = new ConstantesTerminais("/", Codigo.DIVISAO.value , "Sinal de divisão");
     public static final ConstantesTerminais MAIOR = new ConstantesTerminais(">", Codigo.MAIOR.value, "Sinal de comparação maior");
     public static final ConstantesTerminais MENOR = new ConstantesTerminais("<", Codigo.MENOR.value, "Sinal de comparação menor");
-    public static final ConstantesTerminais FIM_ARQUIVO = new ConstantesTerminais("$", Codigo.FIM_ARQUIVO.value, "Sinal fim de arquivo");
+    public static final ConstantesTerminais PONTO = new ConstantesTerminais(".", Codigo.PONTO.value, "Sinal de ponto");
+    public static final ConstantesTerminais FIM_ARQUIVO = new ConstantesTerminais(".", Codigo.FIM_ARQUIVO.value, "Sinal fim de arquivo");
 
 
     public ConstantesTerminais(String s, int tag, String descricao) {

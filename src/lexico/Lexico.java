@@ -175,6 +175,9 @@ public class Lexico {
                 case '\uFFFF':
                     readch();
                     return ConstantesTerminais.FIM_ARQUIVO;
+                case '.':
+                    readch();
+                    return ConstantesTerminais.PONTO;
                 case ';':
                     readch();
                     return ConstantesTerminais.PONTO_VIRGULA;
