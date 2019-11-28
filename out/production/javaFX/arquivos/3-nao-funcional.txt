@@ -1,0 +1,18 @@
+PROGRAM funciona3;
+VAR
+x, y, z :INTEGER;
+PROCEDURE P;
+VAR
+a :INTEGER;
+BEGIN
+READLN(a);
+IF a=x THEN
+z:=z+x
+ELSE BEGIN
+z:=z-x;
+CALL p;
+END;
+
+BEGIN
+WRITELN('Mensagem');
+END.
