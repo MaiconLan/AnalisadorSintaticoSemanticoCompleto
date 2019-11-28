@@ -1,0 +1,15 @@
+PROGRAM funciona4;
+VAR
+x, y, z :INTEGER;
+PROCEDURE P;
+VAR
+a :INTEGER;
+BEGIN
+READLN(a);
+IF a=x THEN
+z:=z+x
+ELSE 
+END;
+BEGIN
+CALL f;
+END.

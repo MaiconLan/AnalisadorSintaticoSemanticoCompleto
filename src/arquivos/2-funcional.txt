@@ -1,0 +1,16 @@
+PROGRAM funciona2;
+VAR
+x, y, z :INTEGER;
+PROCEDURE P;
+VAR
+a :INTEGER;
+BEGIN
+
+READLN(x,y);
+IF x > y THEN
+WRITELN('X maior')
+ELSE
+z:=z+x+y;
+WRITELN(z);
+END;
+END.

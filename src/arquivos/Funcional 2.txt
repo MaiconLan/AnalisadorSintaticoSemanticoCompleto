@@ -1,8 +1,0 @@
-PROGRAM Exemplo1Funcional;
-   VAR a,b:INTEGER;
-BEGIN
-   READLN(a);
-   b:= 0;
-   b:= a+2;
-   WRITELN(b,a);
-END.
